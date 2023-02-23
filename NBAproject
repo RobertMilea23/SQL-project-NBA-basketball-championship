@@ -1,0 +1,295 @@
+DROP TABLE PROJECT_STANDINGS;
+DROP TABLE PROJECT_PLAYERS;
+DROP TABLE PROJECT_STAFF;
+DROP TABLE PROJECT_GAMES;
+DROP TABLE PROJECT_ARENA;
+DROP TABLE PROJECT_TOWN;
+DROP TABLE PROJECT_TEAMS;
+
+
+CREATE TABLE project_TEAMS (
+team_id NUMBER(5) constraint PK_T primary key,
+team_name VARCHAR2(20)
+);
+
+CREATE TABLE project_TOWN (
+town_id NUMBER(5) constraint PK_TW primary key,
+town_name VARCHAR2(20),
+team_id NUMBER(5),
+constraint FK_T foreign key(team_id) references project_TEAMS
+);
+
+CREATE TABLE project_ARENA (
+arena_id NUMBER(5) constraint PK_A primary key,
+arena_name VARCHAR2(20),
+capacity NUMBER(10),
+town_id NUMBER(5),
+constraint FK_TW foreign key(town_id) references project_TOWN
+);
+
+
+
+CREATE TABLE project_GAMES (
+game_id NUMBER(5) constraint PK_G primary key,
+tickets_no NUMBER(10),
+tickets_price NUMBER(10),
+arena_id NUMBER(5),
+constraint FK_A foreign key(arena_id) references project_ARENA
+);
+
+
+CREATE TABLE project_STAFF (
+staff_id NUMBER(5) CONSTRAINT pk_S PRIMARY KEY,
+staff_name VARCHAR2(20),
+manager_id NUMBER(5),
+team_id NUMBER(5),
+CONSTRAINT fk_TM FOREIGN KEY(team_id) REFERENCES PROJECT_TEAMS(team_id),
+CONSTRAINT fk_manager FOREIGN KEY(manager_id) REFERENCES PROJECT_STAFF(staff_id)
+);
+
+ALTER TABLE PROJECT_STAFF ADD (
+s_salary NUMBER(10),
+s_phone NUMBER(10),
+s_email VARCHAR2(30)
+);
+
+CREATE TABLE project_PLAYERS (
+player_id NUMBER(5) CONSTRAINT PK_P PRIMARY KEY,
+player_name VARCHAR2(20),
+position VARCHAR2(10),
+p_salary NUMBER(10),
+average_ppg NUMBER(5),
+team_id NUMBER(5),
+CONSTRAINT fk_TEAM FOREIGN KEY(team_id) REFERENCES PROJECT_TEAMS(team_id)
+);
+
+CREATE TABLE project_STANDINGS (
+placement NUMBER(5) CONSTRAINT PK_PL PRIMARY KEY,
+no_wins NUMBER(5),
+team_id NUMBER(5),
+CONSTRAINT fk_TE FOREIGN KEY(team_id) REFERENCES PROJECT_TEAMS(team_id)
+);
+
+
+INSERT INTO PROJECT_TEAMS values(1, 'Los Angeles Lakers');
+INSERT INTO PROJECT_TEAMS values(2, 'Phoenix Suns');
+INSERT INTO PROJECT_TEAMS values(3, 'Dallas Mavericks');
+INSERT INTO PROJECT_TEAMS values(4, 'Memphis Grizzlies');
+
+DELETE FROM PROJECT_TEAMS where team_id = 4;
+
+SELECT* FROM PROJECT_TEAMS;
+
+
+INSERT INTO PROJECT_TOWN values(1, 'Los Angeles', 1);
+INSERT INTO PROJECT_TOWN values(2, 'Phoenix', 2);
+INSERT INTO PROJECT_TOWN values(3, 'Dallas', 3);
+
+SELECT* FROM PROJECT_TOWN;
+
+ALTER TABLE PROJECT_ARENA MODIFY ( arena_name varchar2(50));
+
+INSERT INTO PROJECT_ARENA values(1, 'Crypto.com Arena', 20000, 1);
+INSERT INTO PROJECT_ARENA values(2, 'Staples Center', 30000, 1);
+INSERT INTO PROJECT_ARENA values(3, 'Footprint Center', 18000, 2);
+INSERT INTO PROJECT_ARENA values(4, 'The United Center', 22000, 2);
+INSERT INTO PROJECT_ARENA values(5, 'American Airlines Center', 25000, 3);
+INSERT INTO PROJECT_ARENA values(6, 'Madison Square Garden', 19000, 3);
+
+SELECT* FROM PROJECT_ARENA;
+
+INSERT INTO PROJECT_GAMES values(1, 18440, 200, 1);
+INSERT INTO PROJECT_GAMES values(2, 28900, 300, 2);
+INSERT INTO PROJECT_GAMES values(3, 29440, 300, 2);
+INSERT INTO PROJECT_GAMES values(4, 17200, 150, 3);
+INSERT INTO PROJECT_GAMES values(5, 20300, 200, 4);
+INSERT INTO PROJECT_GAMES values(6, 23500, 250, 5);
+
+SELECT* FROM PROJECT_GAMES;
+
+INSERT INTO PROJECT_STAFF values(1, 'Jack Black', NULL, 1, 5000, 075344313, 'jackblack@gmail.com');
+INSERT INTO PROJECT_STAFF values(2, 'Dwayne Wade', NULL, 2, 6000, 0775349543, 'dwaynewade@gmail.com');
+INSERT INTO PROJECT_STAFF values(3, 'Kevin Hart', NULL, 3, 5500, 0736894654, 'kevvv@gmail.com');
+INSERT INTO PROJECT_STAFF values(4, 'Kevin Johnson', 2, 2, 2000, 0795346842, 'johnykev@yahoo.com');
+INSERT INTO PROJECT_STAFF values(5, 'John Wayne', 2, 2, 3000, 0758838431, 'wildwayne@gmail.com');
+INSERT INTO PROJECT_STAFF values(6, 'Harry Wang', 1, 1, 2200, 0778325498, 'wanggang@gmail.com');
+INSERT INTO PROJECT_STAFF values(7, 'Harry Kane', 1, 1, 2900, 0788653424, 'harryscholes@gmail.com');
+INSERT INTO PROJECT_STAFF values(8, 'Bobby Johnson', 3, 3, 1900, 0767341895, 'bobbyj@gmail.com');
+INSERT INTO PROJECT_STAFF values(9, 'Stan Lee', 3, 3, 3000, 0747853296, 'stanlee@gmail.com');
+
+SELECT* FROM PROJECT_STAFF;
+
+UPDATE PROJECT_STAFF
+set staff_name= 'Kevin Lavine' where staff_id=3;
+
+INSERT INTO PROJECT_PLAYERS values(1, 'Milea Robert', 'PG', 34000000, 28, 1);
+INSERT INTO PROJECT_PLAYERS values(2, 'Troy Brown', 'SG', 14000000, 12, 1);
+INSERT INTO PROJECT_PLAYERS values(3, 'Max Christie', 'SF', 10000000, 4, 1);
+INSERT INTO PROJECT_PLAYERS values(4, 'Lebron James', 'PF', 42000000, 29, 1);
+INSERT INTO PROJECT_PLAYERS values(5, 'Anthony Davis', 'C', 41000000, 23, 1);
+INSERT INTO PROJECT_PLAYERS values(6, 'Chris Paul', 'PG', 32000000, 16, 2);
+INSERT INTO PROJECT_PLAYERS values(7, 'Devin Booker', 'SG', 39000000, 28, 2);
+INSERT INTO PROJECT_PLAYERS values(8, 'Mikal Bridges', 'SF', 26000000, 15, 2);
+INSERT INTO PROJECT_PLAYERS values(9, 'Torrey Craig', 'PF', 14000000, 8, 2);
+INSERT INTO PROJECT_PLAYERS values(10, 'Deandre Ayton', 'C', 30000000, 17, 2);
+INSERT INTO PROJECT_PLAYERS values(11, 'Luka Doncic', 'PG', 37000000, 33, 3);
+INSERT INTO PROJECT_PLAYERS values(12, 'Spencer Dinwiddie', 'SG', 21000000, 13, 3);
+INSERT INTO PROJECT_PLAYERS values(13, 'Tim Hardaway', 'SF', 18000000, 10, 3);
+INSERT INTO PROJECT_PLAYERS values(14, 'Davis Bertans', 'PF', 15000000, 9, 3);
+INSERT INTO PROJECT_PLAYERS values(15, 'Christian Wood', 'C', 26000, 17, 3);
+
+SELECT* FROM PROJECT_PLAYERS ORDER BY player_id;
+
+INSERT INTO PROJECT_STANDINGS values(1, 32, 1);
+INSERT INTO PROJECT_STANDINGS values(2, 30, 3);
+INSERT INTO PROJECT_STANDINGS values(3, 29, 2);
+
+SELECT* FROM PROJECT_STANDINGS;
+
+--a select that shows us the player's salaries < 20000000
+
+SELECT player_name, p_salary from PROJECT_PLAYERS
+where p_salary < 20000000 order by player_name;
+
+--salary of employees with 'James' in their name
+
+SELECT player_name, p_salary FROM PROJECT_PLAYERS
+WHERE player_name LIKE '%James%';
+
+--display managers from STAFF
+
+SELECT staff_name AS Managers FROM PROJECT_STAFF
+WHERE manager_id IS NULL;
+
+--display players who average BETWEEN 25 and 35 points per game(PPG)
+
+SELECT player_name, average_ppg FROM PROJECT_PLAYERS
+WHERE average_ppg BETWEEN 25 AND 35 ORDER BY average_ppg DESC;
+
+--How many employees does manager 2 have
+
+
+SELECT Count(staff_id) as number_of_emp, manager_id
+FROM PROJECT_STAFF
+group by manager_id
+having manager_id = 2;
+
+
+
+
+--Find the player whose PPG is greater than any other ppg of a player in the players table
+
+SELECT* FROM project_players
+WHERE player_name IN(SELECT player_name FROM project_players WHERE average_ppg > ANY (SELECT average_ppg FROM project_players));
+
+--we use case to see the type of salary our staff has
+
+SELECT staff_name, s_salary, 
+CASE when s_salary > 4000 THEN 'Big salary'
+     when s_salary < 4000 THEN 'Small salary'
+     ELSE 'Average salary'
+END AS Salary_type     
+FROM PROJECT_STAFF;
+
+
+--This query will retrieve the team name, town name, arena name, arena capacity, tickets number, tickets price, standing placement, and standing number of wins from the project_teams, project_town, project_arena, project_games, and project_standings tables.
+
+--It will retrieve the data by joining all the tables on their respective foreign key columns.
+
+SELECT teams.team_name, towns.town_name, arenas.arena_name, arenas.capacity, games.tickets_no, games.tickets_price, standings.placement, standings.no_wins
+FROM project_teams teams
+JOIN project_town towns ON teams.team_id = towns.team_id
+JOIN project_arena arenas ON towns.town_id = arenas.town_id
+JOIN project_games games ON arenas.arena_id = games.arena_id
+JOIN project_standings standings ON teams.team_id = standings.team_id
+
+--Total nr of tickets and average ticket price, where we take into consideration only teams who have sold more than 30000 tickets
+
+SELECT teams.team_name, SUM(games.tickets_no) as total_tickets_sold, AVG(games.tickets_price) as average_ticket_price
+FROM project_teams teams
+JOIN project_town towns ON teams.team_id = towns.team_id
+JOIN project_arena arenas ON towns.town_id = arenas.town_id
+JOIN project_games games ON arenas.arena_id = games.arena_id
+GROUP BY teams.team_name
+HAVING SUM(games.tickets_no) > 30000
+
+--adding game_dates to my games table
+
+ALTER TABLE project_games
+ADD game_date DATE;
+
+--I deleted the updates but they are in the screenshots
+
+--using TO_CHAR to change the format of our dates and show the team name, arena name and new game date
+
+SELECT teams.team_name, arenas.arena_name, TO_CHAR(games.game_date, 'yyyy-mon-dd') as game_date
+FROM project_teams teams
+JOIN project_town towns ON teams.team_id = towns.team_id
+JOIN project_arena arenas ON towns.town_id = arenas.town_id
+JOIN project_games games ON arenas.arena_id = games.arena_id
+
+--shows data for games that have a date of 05-jan-2022
+
+SELECT teams.team_name, arenas.arena_name, games.game_date
+FROM project_teams teams
+JOIN project_town towns ON teams.team_id = towns.team_id
+JOIN project_arena arenas ON towns.town_id = arenas.town_id
+JOIN project_games games ON arenas.arena_id = games.arena_id
+WHERE games.game_date = TO_DATE('05-JAN-2022', 'DD-MON-YYYY');
+
+--EXTRACT month from the game_date column
+
+SELECT teams.team_name, arenas.arena_name, EXTRACT(MONTH FROM games.game_date) as game_month
+FROM project_teams teams
+JOIN project_town towns ON teams.team_id = towns.team_id
+JOIN project_arena arenas ON towns.town_id = arenas.town_id
+JOIN project_games games ON arenas.arena_id = games.arena_id
+
+-- shows the domain of staff emailsS
+
+SELECT staff.staff_name, SUBSTR(staff.s_email, INSTR(staff.s_email, '@')+1) as email_domain
+FROM project_staff staff
+
+--using union to show both staff and players on team 1
+
+SELECT player_name, position, p_salary
+FROM project_players
+WHERE team_id = 1
+UNION
+SELECT staff_name, 'N/A' as position, s_salary
+FROM project_staff
+WHERE team_id = 1;
+
+--this statement will retrieve the player name for all players of team 1 that are not also in team 2
+
+SELECT player_name
+FROM project_players
+WHERE team_id = 1
+MINUS
+SELECT player_name
+FROM project_players
+WHERE team_id = 2;
+
+--change a player's name
+
+UPDATE project_players
+set player_name = 'Lebron James Jr.' where player_id = 9;
+
+--intersecting team 1 player names with team 2 player names
+
+SELECT player_name
+FROM project_players
+WHERE team_id = 1
+INTERSECT
+SELECT player_name
+FROM project_players
+WHERE team_id = 2;
+
+
+--order staff by the level of their authority
+
+SELECT staff_name, CONNECT_BY_ROOT staff_name ManagerName,
+level -1 Number_of_Superiors, SYS_CONNECT_BY_PATH(staff_name, '->') ManagerName
+FROM project_staff
+CONNECT BY PRIOR staff_id=manager_id
+Start with NVL(manager_id,0) =0;
